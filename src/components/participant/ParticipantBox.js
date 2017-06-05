@@ -7,7 +7,7 @@ export default class ParticipantBox extends Component {
     constructor(props) {
         super(props);
 
-        this.state = {userData: {currentUser: '', role: '', teammates: []}, participant: '', state: 0};
+        this.state = {userData: {currentUser: '', role: '', teammates: []}, participant: '', status: 0};
 
         // Bind event handlers
         this.onSignInHandler = this.onSignInHandler.bind(this);
@@ -18,7 +18,7 @@ export default class ParticipantBox extends Component {
 
     async onPresentHandler(event) {
         let username = sessionStorage.getItem('participantName');
-        this.setState({state: 1});
+        this.setState({status: 1});
         try {
             let response = await post('rpc', 'custom/present', {username: username}, 'kinvey');
         } catch (err) {
@@ -39,7 +39,7 @@ export default class ParticipantBox extends Component {
 
     onChangeUserClickHandler(event) {
         sessionStorage.removeItem('participantName');
-        this.setState({userDate: {currentUser: '', role: '', teammates: []}, state: 0});
+        this.setState({userDate: {currentUser: '', role: '', teammates: []}, status: 0});
     }
 
     componentDidMount() {
@@ -50,7 +50,7 @@ export default class ParticipantBox extends Component {
     }
 
     async loadUserInfo(name) {
-        this.setState({state: 1});
+        this.setState({status: 1});
         try {
             let participantData = await post('rpc', 'custom/teammates', {username: name}, 'kinvey');
             if (participantData) {
@@ -59,29 +59,35 @@ export default class ParticipantBox extends Component {
                 let role = participantData.role;
                 let teammates = participantData.teamContacts;
                 sessionStorage.setItem('participantName', username);
-                this.setState({userData: {currentUser: fullName, role: role, teammates: teammates}, state: 2});
+                this.setState({userData: {currentUser: fullName, role: role, teammates: teammates}, status: 2});
             } else {
                 throw new Error('User name not found in database.');
             }
         } catch (err) {
             console.error('Request failed');
             console.dir(err);
-            this.setState({state: 0});
+            this.setState({status: -1});
         }
     }
 
     render() {
         let info = null;
-        if (this.state.state === 0) {
-            info = <SignInForm participant={this.state.participant}
-                               onSignIn={this.onSignInHandler}
-                               onChange={this.onChangeHandler}/>;
-        } else if (this.state.state === 1) {
-            info = <p>Loading data...</p>;
-        } else if (this.state.state === 2) {
-            info = <ParticipantInfo data={this.state.userData}
-                                    userChange={this.onChangeUserClickHandler}
-                                    present={this.onPresentHandler}/>;
+        switch (this.state.status) {
+            case -1:
+            case 0:
+                info = <SignInForm participant={this.state.participant}
+                                   onSignIn={this.onSignInHandler}
+                                   onChange={this.onChangeHandler}
+                                   hint={this.state.status}/>;
+                break;
+            case 1:
+                info = <p>Loading data...</p>;
+                break;
+            case 2:
+                info = <ParticipantInfo data={this.state.userData}
+                                        userChange={this.onChangeUserClickHandler}
+                                        present={this.onPresentHandler}/>;
+                break;
         }
 
         return (

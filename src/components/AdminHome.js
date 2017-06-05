@@ -63,7 +63,7 @@ export default class AdminHome extends Component {
 
         return (
             <div>
-                <p>Admin Panel</p>
+                <h1>Admin Panel</h1>
                 {main}
                 <Endpoint/>
             </div>

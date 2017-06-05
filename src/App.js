@@ -9,10 +9,6 @@ import ParticipantHome from './components/ParticipantHome';
 import AdminHome from './components/AdminHome';
 
 class App extends Component {
-    constructor(props) {
-        super(props);
-    }
-
     render() {
         return (
             <div className="App">

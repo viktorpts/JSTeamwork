@@ -40,11 +40,12 @@ export default class ParticipantHome extends Component {
         if (this.state.auth === 1) {
             main = <ParticipantBox />;
         } else if (this.state.auth === -1) {
-            main = <p>There was an authentication error.</p>;
+            main = <p style={{color: "red"}}>There was an authentication error.</p>;
         }
 
         return (
             <div>
+                <h1>Teamwork Assistant</h1>
                 {main}
             </div>
         )
