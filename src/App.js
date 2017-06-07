@@ -1,7 +1,7 @@
 // Framework
 import React, {Component} from 'react';
 import {Switch, Route} from 'react-router';
-import logo from './logo.svg';
+import logo from './software-university-logo.png';
 import './App.css';
 
 // Components

@@ -93,6 +93,18 @@ function applyTeams(teams) {
     return list;
 }
 
+function archiveTeams(users) {
+    for (let user of users) {
+        user.History = user.Team;
+        user.Team = [];
+        if (user.Role === 'In Class') {
+            user.Role = 'Onsite';
+        }
+    }
+
+    return users;
+}
+
 function sortUsers(a, b) {
     let ra = 0, rb = 0;
     switch (a.Role) {
@@ -112,7 +124,7 @@ function sortUsers(a, b) {
             break;
     }
 
-    return ra-rb;
+    return ra - rb;
 }
 
-export {createUser, parseUsers, getAllUsers, createGroups, applyTeams, updateUser};
+export {createUser, parseUsers, getAllUsers, createGroups, applyTeams, updateUser, archiveTeams};

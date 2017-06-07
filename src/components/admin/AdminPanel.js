@@ -3,6 +3,7 @@ import {Switch, Route} from 'react-router';
 import {Link} from 'react-router-dom';
 import Importer from './Importer';
 import Assign from './Assign';
+import Archive from './Archive';
 
 export default class AdminPanel extends Component {
     render() {
@@ -14,6 +15,7 @@ export default class AdminPanel extends Component {
                 <Switch>
                     <Route path="/admin/import" component={Importer}/>
                     <Route path="/admin/assign" component={Assign}/>
+                    <Route path="/admin/manage" component={Archive}/>
                 </Switch>
             </div>
         );
