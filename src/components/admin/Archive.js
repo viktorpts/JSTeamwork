@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
-import {getAllUsers, archiveTeams as archive} from '../../services/repository';
+import {getAllUsers, archiveTeams as archive, applyTeamWipe} from '../../services/repository';
 import Participant from './assign/Participant';
-import TeamArchiver from './manage/TeamArchiver';
+import Team from './assign/Team';
 
 export default class Assign extends Component {
     constructor(props) {
@@ -44,10 +44,20 @@ export default class Assign extends Component {
         this.setState({list: list, status: 2});
     }
 
-    saveChanges(event) {
+    async saveChanges(event) {
         let btn = event.target;
         btn.disabled = true;
         this.setState({status: 3});
+
+        try {
+            await applyTeamWipe(this.state.list);
+            this.setState({status: 0});
+            this.loadParticipants();
+        } catch (err) {
+            console.error('Request failed');
+            console.dir(err);
+            this.setState({status: -1});
+        }
     }
 
     render() {
@@ -97,13 +107,7 @@ export default class Assign extends Component {
                     </div>
                 </div>;
         } else if (this.state.status === 3) {
-            main =
-                <div>
-                    <p style={{color: "red"}}>Do not close this window until all tasks are finished!</p>
-                    {this.state.list.map(user =>
-                        <TeamArchiver key={user.Username}
-                                      user={user}/>)}
-                </div>;
+            main = <p>Saving changes...</p>;
         }
 
         return (

@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import SignInForm from './SignInForm';
 import ParticipantInfo from './ParticipantInfo';
+import DQInfo from './DQInfo';
 import {post} from '../../services/requester';
 
 export default class ParticipantBox extends Component {
@@ -84,9 +85,14 @@ export default class ParticipantBox extends Component {
                 info = <p>Loading data...</p>;
                 break;
             case 2:
-                info = <ParticipantInfo data={this.state.userData}
-                                        userChange={this.onChangeUserClickHandler}
-                                        present={this.onPresentHandler}/>;
+                if (this.state.userData.role === 'DQ') {
+                    info = <DQInfo data={this.state.userData}
+                                   userChange={this.onChangeUserClickHandler}/>;
+                } else {
+                    info = <ParticipantInfo data={this.state.userData}
+                                            userChange={this.onChangeUserClickHandler}
+                                            present={this.onPresentHandler}/>;
+                }
                 break;
         }
 

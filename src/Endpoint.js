@@ -8,6 +8,7 @@ export default class Endpoint extends Component {
 
         this.onTest = this.onTest.bind(this);
         this.onCreate = this.onCreate.bind(this);
+        this.onUpdate = this.onUpdate.bind(this);
     }
 
     async onTest() {
@@ -30,6 +31,19 @@ export default class Endpoint extends Component {
         }
     }
 
+    async onUpdate() {
+        try {
+            let userList = {users: [
+                ['chungus', {Role: 'DQ'}]
+            ]};
+            let response = await post('rpc', 'custom/updateUsers', userList, 'kinvey');
+            console.dir(response);
+        } catch (err) {
+            console.error('Request failed');
+            console.dir(err);
+        }
+    }
+
     render() {
         return (
             <div style={{border: "1px solid red", display: "inline-block", padding: "1em", margin: "1em"}}>
@@ -41,6 +55,10 @@ export default class Endpoint extends Component {
                 <div>
                     <p>Create new participant Mario</p>
                     <button onClick={this.onCreate}>Create user</button>
+                </div>
+                <div>
+                    <p>Update participant "chungus:</p>
+                    <button onClick={this.onUpdate}>Update user</button>
                 </div>
             </div>
         )

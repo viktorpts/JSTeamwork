@@ -96,13 +96,19 @@ function applyTeams(teams) {
 function archiveTeams(users) {
     for (let user of users) {
         user.History = user.Team;
-        user.Team = [];
+        user.Team = [''];
         if (user.Role === 'In Class') {
             user.Role = 'Onsite';
         }
     }
 
     return users;
+}
+
+function applyTeamWipe(users) {
+    let newValues = {users: users.map(u => [u.Username, {Role: u.Role, History: u.History, Team: u.Team}])};
+
+    return post('rpc', 'custom/updateUsers', newValues, 'kinvey');
 }
 
 function sortUsers(a, b) {
@@ -127,4 +133,4 @@ function sortUsers(a, b) {
     return ra - rb;
 }
 
-export {createUser, parseUsers, getAllUsers, createGroups, applyTeams, updateUser, archiveTeams};
+export {createUser, parseUsers, getAllUsers, createGroups, applyTeams, updateUser, archiveTeams, applyTeamWipe};
