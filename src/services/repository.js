@@ -1,5 +1,7 @@
 import {get, post, update} from './requester';
 
+// TODO participant list is used in multiple places, it should be placed here as a synced shared resource
+
 async function createUser(name, username, contact, role) {
     let newUser = {
         Name: name,
@@ -13,8 +15,8 @@ async function createUser(name, username, contact, role) {
     return await post('appdata', 'Participants', newUser, 'kinvey');
 }
 
-async function updateUser(user) {
-    return await update('appdata', 'Participants/' + user._id, user, 'kinvey');
+function updateUser(user) {
+    return update('appdata', 'Participants/' + user._id, user, 'kinvey');
 }
 
 function parseUsers(data) {

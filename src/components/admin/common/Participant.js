@@ -1,6 +1,23 @@
 import React, {Component} from 'react';
+import {updateUser} from '../../../services/repository';
 
 export default class Participant extends Component {
+    async disqualify(event) {
+        let btn = event.target;
+        btn.disabled = true;
+        btn.textContent = "Working...";
+        let newValues = Object.assign({}, this.props.user);
+        newValues.Role = 'DQ';
+        try {
+            await updateUser(newValues);
+            btn.textContent = "Done";
+        } catch (err) {
+            console.error('Request failed');
+            console.dir(err);
+            btn.textContent = "Request failed";
+        }
+    }
+
     render() {
         let style = {
             color: "white",
@@ -8,6 +25,14 @@ export default class Participant extends Component {
             backgroundColor: "gray",
             margin: "0.25em",
             padding: "0.25em 1em 0.25em 1em"
+        };
+
+        if (this.props.manage) {
+            style.display = "block";
+        }
+
+        let btnStyle = {
+            color: "red"
         };
 
         switch (this.props.user.Role) {
@@ -23,7 +48,8 @@ export default class Participant extends Component {
         }
 
         return (
-            <span style={style}>{this.props.user.Name} ({this.props.user.Username})</span>
+            <span style={style}>{this.props.user.Name} ({this.props.user.Username})&nbsp;
+                {this.props.manage && <button onClick={(event) => this.disqualify(event)} style={btnStyle}>Disqualify</button>}</span>
         )
     }
 }
