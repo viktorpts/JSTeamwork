@@ -111,6 +111,37 @@ function applyTeamWipe(users) {
     return post('rpc', 'custom/updateUsers', newValues, 'kinvey');
 }
 
+function teamsExist(list) {
+    if (list.filter(u => u.Team.filter(e => e !== '').length > 0).length > 0) {
+        return true;
+    }
+    return false;
+}
+
+function teamsFromUsers(list) {
+    let teams = [];
+    let unassigned = [];
+    let parsed = new Set();
+
+    for (let user of list) {
+        if (parsed.has(user.Username)) continue;
+        if (user.Team.filter(e => e !== '').length === 0) {
+            unassigned.push(user.Username);
+            parsed.add(user.Username);
+            continue;
+        }
+        let current = user.Team.map(u => u);
+        current.push(user.Username);
+        current.forEach(u => parsed.add(u));
+        teams.push(current);
+    }
+
+    teams.push(unassigned);
+    teams = teams.map(t => t.map(u => list.filter(p => p.Username === u)[0]));
+
+    return teams;
+}
+
 function sortUsers(a, b) {
     let ra = 0, rb = 0;
     switch (a.Role) {
@@ -133,4 +164,15 @@ function sortUsers(a, b) {
     return ra - rb;
 }
 
-export {createUser, parseUsers, getAllUsers, createGroups, applyTeams, updateUser, archiveTeams, applyTeamWipe};
+export {
+    createUser,
+    parseUsers,
+    getAllUsers,
+    createGroups,
+    applyTeams,
+    updateUser,
+    archiveTeams,
+    applyTeamWipe,
+    teamsExist,
+    teamsFromUsers
+};

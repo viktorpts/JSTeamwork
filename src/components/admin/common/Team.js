@@ -10,6 +10,8 @@ export default class Team extends Component {
             padding: "0.25em 1em 0.25em 1em"
         };
 
+        if (this.props.list.length === 0) return null;
+
         return (
             <div style={style}>
                 {this.props.list.map(row =>

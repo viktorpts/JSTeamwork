@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {updateUser} from '../../../services/repository';
+import {updateUser as update} from '../../../services/repository';
 
 export default class TeamArchiver extends Component {
     constructor(props) {
@@ -14,7 +14,7 @@ export default class TeamArchiver extends Component {
 
     async updateUser() {
         try {
-            await updateUser(this.props.user);
+            await update(this.props.user);
             this.setState({status: 1});
         } catch (err) {
             console.error('Request failed');

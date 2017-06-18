@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
-import {getAllUsers, createGroups as create, applyTeams} from '../../services/repository';
-import Participant from './assign/Participant';
-import Team from './assign/Team';
+import {getAllUsers, createGroups as create, applyTeams, teamsExist} from '../../services/repository';
+import ParticipantList from './common/ParticipantList';
 import TeamCreator from './assign/TeamCreator';
+import TeamList from './common/TeamList';
 
 export default class Assign extends Component {
     constructor(props) {
@@ -58,30 +58,14 @@ export default class Assign extends Component {
         } else if (this.state.status === 1) {
             main =
                 <div>
-                    <div>
-                        {this.state.list.filter(e => e.Role === 'In Class').map(row =>
-                            <Participant key={row._id} user={row}/>)}
-                    </div>
-                    <div>
-                        {this.state.list.filter(e => e.Role === 'Onsite').map(row =>
-                            <Participant key={row._id} user={row}/>)}
-                    </div>
-                    <div>
-                        {this.state.list.filter(e => e.Role === 'Online').map(row =>
-                            <Participant key={row._id} user={row}/>)}
-                    </div>
-                    <div>
-                        {this.state.list.filter(e => e.Role === 'DQ').map(row =>
-                            <Participant key={row._id} user={row}/>)}
-                    </div>
+                    {teamsExist(this.state.list) && <p style={{color: "red"}}>Some participants already have teams assigned. Go to Manage to archive existing teams.</p>}
+                    <ParticipantList list={this.state.list}/>
                 </div>;
         } else if (this.state.status === 2) {
             main =
                 <div>
                     <h2>Preliminary teams</h2>
-                    {this.state.teams.map(team =>
-                        <Team key={team.map(e => e.Username).join('')}
-                              list={team}/>)}
+                    <TeamList teams={this.state.teams}/>
                     <button onClick={this.saveGroups}>Commit</button>
                 </div>
         } else if (this.state.status === 3) {

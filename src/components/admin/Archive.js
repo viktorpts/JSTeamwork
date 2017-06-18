@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
-import {getAllUsers, archiveTeams as archive, applyTeamWipe} from '../../services/repository';
-import Participant from './assign/Participant';
-import Team from './assign/Team';
+import {getAllUsers, archiveTeams as archive, applyTeamWipe, teamsExist, teamsFromUsers} from '../../services/repository';
+import ParticipantList from './common/ParticipantList';
+import TeamList from './common/TeamList';
 
 export default class Assign extends Component {
     constructor(props) {
@@ -52,7 +52,8 @@ export default class Assign extends Component {
         try {
             await applyTeamWipe(this.state.list);
             this.setState({status: 0});
-            this.loadParticipants();
+            await this.loadParticipants();
+            btn.disabled = false;
         } catch (err) {
             console.error('Request failed');
             console.dir(err);
@@ -67,44 +68,15 @@ export default class Assign extends Component {
         } else if (this.state.status === 1) {
             main =
                 <div>
-                    <div>
-                        {this.state.list.filter(e => e.Role === 'In Class').map(row =>
-                            <Participant key={row._id} user={row}/>)}
-                    </div>
-                    <div>
-                        {this.state.list.filter(e => e.Role === 'Onsite').map(row =>
-                            <Participant key={row._id} user={row}/>)}
-                    </div>
-                    <div>
-                        {this.state.list.filter(e => e.Role === 'Online').map(row =>
-                            <Participant key={row._id} user={row}/>)}
-                    </div>
-                    <div>
-                        {this.state.list.filter(e => e.Role === 'DQ').map(row =>
-                            <Participant key={row._id} user={row}/>)}
-                    </div>
+                    {!teamsExist(this.state.list) && <p style={{color: "red"}}>No teams have been detected. You can still wipe presence information (this will delete team history!).</p>}
+                    <TeamList teams={teamsFromUsers(this.state.list)} />
                 </div>;
         } else if (this.state.status === 2) {
             main =
                 <div>
                     <h3>Teams have been archived, presence has been wiped</h3>
                     <button onClick={this.saveChanges}>Commit changes</button>
-                    <div>
-                        {this.state.list.filter(e => e.Role === 'In Class').map(row =>
-                            <Participant key={row._id} user={row}/>)}
-                    </div>
-                    <div>
-                        {this.state.list.filter(e => e.Role === 'Onsite').map(row =>
-                            <Participant key={row._id} user={row}/>)}
-                    </div>
-                    <div>
-                        {this.state.list.filter(e => e.Role === 'Online').map(row =>
-                            <Participant key={row._id} user={row}/>)}
-                    </div>
-                    <div>
-                        {this.state.list.filter(e => e.Role === 'DQ').map(row =>
-                            <Participant key={row._id} user={row}/>)}
-                    </div>
+                    <ParticipantList list={this.state.list} />
                 </div>;
         } else if (this.state.status === 3) {
             main = <p>Saving changes...</p>;
@@ -112,7 +84,7 @@ export default class Assign extends Component {
 
         return (
             <div>
-                <h2>Manage participants</h2>
+                <h2>Manage Teams</h2>
                 <div>
                     <button onClick={this.reload}>&#8635;</button>
                     <button onClick={this.archiveTeams}>Archive teams</button>
