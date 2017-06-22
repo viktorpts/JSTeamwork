@@ -49,8 +49,7 @@ export default class ManageParticipants extends Component {
         }
 
         return (
-            <div>
-                <h2>Manage Participants</h2>
+            <div className="Component-body">
                 <div>
                     <button onClick={this.reload}>&#8635;</button>
                 </div>

@@ -97,7 +97,7 @@ export default class ParticipantBox extends Component {
         }
 
         return (
-            <div className="participant-box">
+            <div className="participant-box Component-body">
                 {info}
             </div>
         )

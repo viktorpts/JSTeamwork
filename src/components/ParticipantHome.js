@@ -45,7 +45,7 @@ export default class ParticipantHome extends Component {
 
         return (
             <div>
-                <h1>Teamwork Assistant</h1>
+                <div className="Component-header"><span className="title">Teamwork Assistant</span></div>
                 {main}
             </div>
         )

@@ -4,7 +4,7 @@ export default class ParticipantTable extends Component {
     render() {
         return (
             <div>
-                <table>
+                <table className="import-table">
                     <caption>Participants</caption>
                     <tbody>
                     <tr>
@@ -22,7 +22,7 @@ export default class ParticipantTable extends Component {
                         </tr>)}
                     </tbody>
                 </table>
-                <button onClick={this.props.onImportClick}>Import</button>
+                <button className="btn" onClick={this.props.onImportClick}>Import</button>
             </div>
         )
     }

@@ -58,8 +58,9 @@ export default class Importer extends Component {
         }
 
         return (
-            <div>
-                <h2>Participant Importer</h2>
+            <div className="Component-body">
+                <p>Paste tab-separated list here in format:</p>
+                <p>username | full name | email | role</p>
                 {main}
             </div>
         );

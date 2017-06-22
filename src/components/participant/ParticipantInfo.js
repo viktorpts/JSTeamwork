@@ -10,9 +10,9 @@ export default class ParticipantInfo extends Component {
 
         return (
             <div>
-                <p>Welcome, {this.props.data.currentUser}. <button name="changeUser" onClick={this.props.userChange}>Change user</button></p>
+                <p>Welcome, {this.props.data.currentUser}. <button className="btn" name="changeUser" onClick={this.props.userChange}>Change user</button></p>
                 <p>You are currently marked as {this.props.data.role}.</p>
-                {this.props.data.role === 'Onsite' ? <button name="present" onClick={this.props.present}>Mark me as present in class</button> : null}
+                {this.props.data.role === 'Onsite' ? <button className="btn" name="present" onClick={this.props.present}>Mark me as present in class</button> : null}
                 {teamInfo}
             </div>
         )

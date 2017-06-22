@@ -83,11 +83,10 @@ export default class Assign extends Component {
         }
 
         return (
-            <div>
-                <h2>Manage Teams</h2>
+            <div className="Component-body">
                 <div>
-                    <button onClick={this.reload}>&#8635;</button>
-                    <button onClick={this.archiveTeams}>Archive teams</button>
+                    <button className="btn" onClick={this.reload}>&#8635;</button>
+                    <button className="btn" onClick={this.archiveTeams}>Archive teams</button>
                 </div>
                 {main}
             </div>

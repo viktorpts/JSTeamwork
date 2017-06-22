@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import './admin/Admin.css';
 import {login} from '../services/auth';
 
 import Endpoint from '../Endpoint';
@@ -63,9 +64,8 @@ export default class AdminHome extends Component {
 
         return (
             <div>
-                <h1>Admin Panel</h1>
+                <div className="Component-header"><span className="title">Admin Panel</span></div>
                 {main}
-                <Endpoint/>
             </div>
         )
     }

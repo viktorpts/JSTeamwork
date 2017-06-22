@@ -66,7 +66,7 @@ export default class Assign extends Component {
                 <div>
                     <h2>Preliminary teams</h2>
                     <TeamList teams={this.state.teams}/>
-                    <button onClick={this.saveGroups}>Commit</button>
+                    <button className="btn" onClick={this.saveGroups}>Commit</button>
                 </div>
         } else if (this.state.status === 3) {
             main =
@@ -79,11 +79,10 @@ export default class Assign extends Component {
         }
 
         return (
-            <div>
-                <h2>Assign teams</h2>
+            <div className="Component-body">
                 <div>
-                    <button onClick={this.reload}>&#8635;</button>
-                    <button onClick={this.createGroups}>Create groups</button>
+                    <button className="btn" onClick={this.reload}>&#8635;</button>
+                    <button className="btn" onClick={this.createGroups}>Create groups</button>
                 </div>
                 {main}
             </div>

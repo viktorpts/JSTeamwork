@@ -6,9 +6,16 @@ export default class TeamBox extends Component {
             <div>
                 <h2>Team Info</h2>
                 <p>For the current task, you have to collaborate with the following colleagues:</p>
-                <ul>
-                    {this.props.list.map(t => <li key={t.name}>{t.name} <span style={{color: 'blue'}}>{t.contact}</span></li>)}
-                </ul>
+                <table className="Teammates">
+                    <tbody>
+                    {this.props.list.map(t =>
+                        <tr key={t.name}>
+                            <td>{t.name}</td>
+                            <td><span style={{color: 'blue'}}>{t.contact}</span></td>
+                        </tr>
+                    )}
+                    </tbody>
+                </table>
             </div>
         )
     }

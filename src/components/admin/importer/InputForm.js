@@ -10,7 +10,7 @@ export default class InputForm extends Component {
                                   onChange={this.props.onFormChange}></textarea>
                 </div>
                 <div>
-                    <input type="submit" value="Parse" onClick={this.props.onParseClick}/>
+                    <input className="btn" type="submit" value="Parse" onClick={this.props.onParseClick}/>
                 </div>
             </form>
         )

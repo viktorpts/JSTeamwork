@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {Switch, Route} from 'react-router';
-import {Link} from 'react-router-dom';
+import {NavLink} from 'react-router-dom';
 import Importer from './Importer';
 import Assign from './Assign';
 import Archive from './Archive';
@@ -10,11 +10,14 @@ export default class AdminPanel extends Component {
     render() {
         return (
             <div>
-                <Link to="/admin/import">Import Participants</Link>|
-                <Link to="/admin/assign">Assign Teams</Link>|
-                <Link to="/admin/teams">Manage Teams</Link>|
-                <Link to="/admin/participants">Manage Participants</Link>
+                <header className="navigation Component-header">
+                    <NavLink activeClassName="active-link" to="/admin/import">Import Participants</NavLink>
+                    <NavLink activeClassName="active-link" to="/admin/assign">Assign Teams</NavLink>
+                    <NavLink activeClassName="active-link" to="/admin/teams">Manage Teams</NavLink>
+                    <NavLink activeClassName="active-link" to="/admin/participants">Manage Participants</NavLink>
+                </header>
                 <Switch>
+                    <Route exact path="/admin" component={InlineInfo}/>
                     <Route path="/admin/import" component={Importer}/>
                     <Route path="/admin/assign" component={Assign}/>
                     <Route path="/admin/teams" component={Archive}/>
@@ -23,4 +26,8 @@ export default class AdminPanel extends Component {
             </div>
         );
     }
+}
+
+function InlineInfo(prop) {
+    return <p>Please, select category.</p>;
 }

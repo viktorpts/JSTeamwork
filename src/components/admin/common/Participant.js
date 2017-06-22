@@ -19,17 +19,7 @@ export default class Participant extends Component {
     }
 
     render() {
-        let style = {
-            color: "white",
-            display: "inline-block",
-            backgroundColor: "gray",
-            margin: "0.25em",
-            padding: "0.25em 1em 0.25em 1em"
-        };
-
-        if (this.props.manage) {
-            style.display = "block";
-        }
+        let style = {};
 
         let btnStyle = {
             color: "red"
@@ -48,8 +38,13 @@ export default class Participant extends Component {
         }
 
         return (
-            <span style={style}>{this.props.user.Name} ({this.props.user.Username})&nbsp;
-                {this.props.manage && <button onClick={(event) => this.disqualify(event)} style={btnStyle}>Disqualify</button>}</span>
+            <div className="participant" style={style}>
+                {this.props.showName && <span className="participant-info">{this.props.user.Name}</span>}
+                {this.props.showUser && <span className="participant-info">{this.props.user.Username}</span>}
+                {this.props.manage &&
+                <button className="btn participant-info" onClick={(event) => this.disqualify(event)} style={btnStyle}>
+                    Disqualify</button>}
+            </div>
         )
     }
 }

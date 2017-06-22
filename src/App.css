@@ -1,19 +1,94 @@
 .App {
-  text-align: center;
+    text-align: center;
+    background-color: #eee;
+}
+
+.App-logo {
+    vertical-align: middle;
 }
 
 .App-header {
-  background-color: #222;
-  height: 50px;
-  padding: 20px;
-  color: white;
+    background-color: #234465;
+    padding: 1em;
+    vertical-align: middle;
+}
+
+.title {
+    font-family: "LatoBlack","Arial","Helvetica",sans-serif;
+    font-size: 1.5em;
+    font-weight: 600;
+    display: inline-block;
+    vertical-align: middle;
 }
 
 .App-intro {
-  font-size: large;
+    font-size: large;
 }
 
 @keyframes App-logo-spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.footer {
+    margin-top: 2em;
+}
+
+.Component-header {
+    text-align: center;
+    background-color: #222;
+    color: white;
+    padding: 0.25em;
+}
+
+input {
+    width: 15em;
+    height: 2em;
+    text-align: center;
+    margin: 0.25em 0.5em 0.25em 0.5em;
+    padding: 0;
+    border: 0;
+}
+
+input.btn {
+    font-family: "LatoBlack","Arial","Helvetica",sans-serif;
+    background-color: #ffa000;
+    color: white;
+    font-weight: 800;
+}
+
+.btn {
+    font-family: "LatoBlack","Arial","Helvetica",sans-serif;
+    background-color: #ffa000;
+    color: white;
+    font-weight: 800;
+    height: 2em;
+    text-align: center;
+    margin: 0.25em 0.5em 0.25em 0.5em;
+    padding-left: 1em;
+    padding-right: 1em;
+    border: 0;
+    cursor: pointer;
+}
+
+.btn:hover {
+    background-color: #ffc020;
+}
+
+.Teammates {
+    margin-left: auto;
+    margin-right: auto;
+    text-align: left;
+}
+
+.Teammates td {
+    padding: 0.25em 0.5em 0.25em 0.5em;
+}
+
+.Component-body {
+    padding-top: 1em;
 }

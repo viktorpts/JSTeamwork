@@ -19,6 +19,7 @@ class App extends Component {
                     <Route exact path="/" component={ParticipantHome}/>
                     <Route path="/admin" component={AdminHome}/>
                 </Switch>
+                <div className="Component-header footer"><span>&copy; 2017</span></div>
             </div>
         );
     }
