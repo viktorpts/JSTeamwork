@@ -113,6 +113,12 @@ function applyTeamWipe(users) {
     return post('rpc', 'custom/updateUsers', newValues, 'kinvey');
 }
 
+function saveTeams(users) {
+    let newValues = {users: users.map(u => [u.Username, {Team: u.Team}])};
+
+    return post('rpc', 'custom/updateUsers', newValues, 'kinvey');
+}
+
 function teamsExist(list) {
     if (list.filter(u => u.Team.filter(e => e !== '').length > 0).length > 0) {
         return true;
@@ -176,5 +182,6 @@ export {
     archiveTeams,
     applyTeamWipe,
     teamsExist,
-    teamsFromUsers
+    teamsFromUsers,
+    saveTeams
 };

@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {getAllUsers, createGroups as create, applyTeams, teamsExist} from '../../services/repository';
+import {getAllUsers, createGroups as create, applyTeams, teamsExist, saveTeams} from '../../services/repository';
 import ParticipantList from './common/ParticipantList';
 import TeamCreator from './assign/TeamCreator';
 import TeamList from './common/TeamList';
@@ -43,12 +43,23 @@ export default class Assign extends Component {
         this.setState({status: 2, teams: teams});
     }
 
-    saveGroups(event) {
+    async saveGroups(event) {
         let btn = event.target;
         btn.disabled = true;
         // Apply teammates to users in local list
         let list = applyTeams(this.state.teams);
         this.setState({list: list, status: 3});
+
+        try {
+            await saveTeams(this.state.list);
+            this.setState({status: 0});
+            await this.loadParticipants();
+            btn.disabled = false;
+        } catch (err) {
+            console.error('Request failed');
+            console.dir(err);
+            this.setState({status: -1});
+        }
     }
 
     render() {
@@ -69,13 +80,7 @@ export default class Assign extends Component {
                     <button className="btn" onClick={this.saveGroups}>Commit</button>
                 </div>
         } else if (this.state.status === 3) {
-            main =
-                <div>
-                    <p style={{color: "red"}}>Do not close this window until all tasks are finished!</p>
-                    {this.state.list.map(user =>
-                        <TeamCreator key={user.Username}
-                                     user={user}/>)}
-                </div>;
+            main = <p>Saving changes...</p>;
         }
 
         return (
