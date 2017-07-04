@@ -10,6 +10,7 @@ export default class TeamBox extends Component {
                     <tbody>
                     {this.props.list.map(t =>
                         <tr key={t.name}>
+                            <td><a className="btn" href={`https://softuni.bg/users/profile/show/${t.username}`}>&#8505;</a></td>
                             <td>{t.name}</td>
                             <td><span style={{color: 'blue'}}>{t.contact}</span></td>
                         </tr>

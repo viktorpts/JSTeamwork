@@ -73,10 +73,17 @@ input.btn {
     padding-right: 1em;
     border: 0;
     cursor: pointer;
+    text-decoration: none;
 }
 
 .btn:hover {
     background-color: #ffc020;
+}
+
+.btn:disabled {
+    color: #999;
+    background-color: #eee040;
+    cursor: auto;
 }
 
 .Teammates {
