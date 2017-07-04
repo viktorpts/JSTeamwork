@@ -5,7 +5,7 @@ export default class Participant extends Component {
     constructor(props) {
         super(props);
 
-        this.state = {selectedRole: this.props.user.Role}
+        this.state = {selectedRole: this.props.user.Role};
 
         this.onChange = this.onChange.bind(this);
     }
@@ -31,7 +31,7 @@ export default class Participant extends Component {
     }
 
     render() {
-        let style = {};
+        let className = 'participant';
 
         let controls =
             <div>
@@ -46,19 +46,19 @@ export default class Participant extends Component {
 
         switch (this.props.user.Role) {
             case "In Class":
-                style.backgroundColor = "Green";
+                className += ' present';
                 break;
             case "Online":
-                style.backgroundColor = "Blue";
+                className += ' online';
                 break;
             case "DQ":
-                style.backgroundColor = "Red";
+                className += ' dq';
                 break;
         }
 
 
         return (
-            <div className="participant" style={style}>
+            <div className={className}>
                 {this.props.showName && <span className="participant-info">{this.props.user.Name}</span>}
                 {this.props.showUser && <span className="participant-info">{this.props.user.Username}</span>}
                 {this.props.manage && controls}

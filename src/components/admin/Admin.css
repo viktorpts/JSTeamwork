@@ -53,10 +53,22 @@ form label {
 .participant {
     color: white;
     display: inline-block;
-    background-color: gray;
+    background-color: #808080;
     margin: 0.25em;
     padding: 0.25em 1em 0.25em 1em;
     width: 12em;
+}
+
+.participant.present {
+    background-color: #50a050;
+}
+
+.participant.online {
+    background-color: #5050a0;
+}
+
+.participant.dq {
+    background-color: #a05050;
 }
 
 .participant-info {
