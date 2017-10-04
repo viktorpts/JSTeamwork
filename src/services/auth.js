@@ -2,13 +2,8 @@ import * as requester from './requester';
 
 
 function saveSession(userInfo) {
-    let userAuth = userInfo._kmd.authtoken;
-    sessionStorage.setItem('authToken', userAuth);
-    let userId = userInfo._id;
-    sessionStorage.setItem('userId', userId);
-    let username = userInfo.participant;
-    sessionStorage.setItem('username', username);
-    sessionStorage.setItem('teamId', userInfo.teamId);
+    sessionStorage.setItem('authToken', userInfo._kmd.authtoken);
+    sessionStorage.setItem('userId', userInfo._id);
 
     //observer.onSessionUpdate();
 }

@@ -1,4 +1,4 @@
-import {get, post, update} from './requester';
+import { get, post, update } from './requester';
 
 // TODO participant list is used in multiple places, it should be placed here as a synced shared resource
 
@@ -9,7 +9,7 @@ async function createUser(name, username, contact, role) {
         Email: contact,
         Role: role,
         History: [],
-        Team: []
+        Team: 0
     };
 
     return await post('appdata', 'Participants', newUser, 'kinvey');
@@ -27,7 +27,7 @@ function parseUsers(data) {
             username: e[0],
             name: (names => `${names.shift()} ${names.pop()}`)(e[1].split(/\s+/).filter(e => e !== '')),
             contact: e[2],
-            role: e[3] === 'Онлайн' ? 'Online' : 'Onsite'
+            role: e[3] === 'Присъствено' ? 'Onsite' : 'Online'
         }));
 
     return list;
@@ -36,6 +36,12 @@ function parseUsers(data) {
 async function getAllUsers() {
     let list = await get('appdata', 'Participants', 'kinvey');
     return list.sort(sortUsers);
+}
+
+async function getUserInfo(username) {
+    let userInfo = await post('rpc', 'custom/teammates', {username});
+    userInfo.teamContacts = userInfo.teamContacts.filter(c => c.username !== username);
+    return userInfo;
 }
 
 function createGroups(list) {
@@ -84,10 +90,22 @@ function scramble(list) {
 
 function applyTeams(teams) {
     let list = [];
-
+    // Find last used ID
+    let lastId = 0;
     for (let team of teams) {
         for (let user of team) {
-            user.Team = team.map(u => u.Username).filter(name => name !== user.Username);
+            for (let teamId of user.History) {
+                if (teamId > lastId) {
+                    lastId = teamId;
+                }
+            }
+        }
+    }
+
+    for (let team of teams) {
+        lastId++;
+        for (let user of team) {
+            user.Team = lastId;
             list.push(user);
         }
     }
@@ -97,8 +115,11 @@ function applyTeams(teams) {
 
 function archiveTeams(users) {
     for (let user of users) {
-        user.History = user.Team;
-        user.Team = [''];
+        user.History = user.History || [];
+        if (user.Team !== 0) {
+            user.History.push(user.Team);
+        }
+        user.Team = 0;
         if (user.Role === 'In Class') {
             user.Role = 'Onsite';
         }
@@ -108,46 +129,42 @@ function archiveTeams(users) {
 }
 
 function applyTeamWipe(users) {
-    let newValues = {users: users.map(u => [u.Username, {Role: u.Role, History: u.History, Team: u.Team}])};
+    let newValues = { users: users.map(u => [u.Username, { Role: u.Role, History: u.History, Team: u.Team }]) };
 
     return post('rpc', 'custom/updateUsers', newValues, 'kinvey');
 }
 
 function saveTeams(users) {
-    let newValues = {users: users.map(u => [u.Username, {Team: u.Team}])};
+    let newValues = { users: users.map(u => [u.Username, { Team: u.Team }]) };
 
     return post('rpc', 'custom/updateUsers', newValues, 'kinvey');
 }
 
 function teamsExist(list) {
-    if (list.filter(u => u.Team.filter(e => e !== '').length > 0).length > 0) {
+    if (list.filter(u => u.Team !== 0).length > 0) {
         return true;
     }
     return false;
 }
 
 function teamsFromUsers(list) {
-    let teams = [];
+    let teams = new Map();
     let unassigned = [];
-    let parsed = new Set();
 
     for (let user of list) {
-        if (parsed.has(user.Username)) continue;
-        if (user.Team.filter(e => e !== '').length === 0) {
-            unassigned.push(user.Username);
-            parsed.add(user.Username);
+        if (user.Team === 0) {
+            unassigned.push(user);
             continue;
         }
-        let current = user.Team.map(u => u);
-        current.push(user.Username);
-        current.forEach(u => parsed.add(u));
-        teams.push(current);
+        if (!teams.has(user.Team)) {
+            teams.set(user.Team, []);
+        }
+        teams.get(user.Team).push(user);
     }
 
-    teams.push(unassigned);
-    teams = teams.map(t => t.map(u => list.filter(p => p.Username === u)[0]));
+    teams.set(0, unassigned);
 
-    return teams;
+    return [...teams.values()];
 }
 
 function sortUsers(a, b) {
@@ -176,6 +193,7 @@ export {
     createUser,
     parseUsers,
     getAllUsers,
+    getUserInfo,
     createGroups,
     applyTeams,
     updateUser,

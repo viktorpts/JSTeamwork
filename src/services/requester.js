@@ -1,58 +1,44 @@
 import $ from 'jquery';
 
-const kinveyBaseUrl = "https://baas.kinvey.com/";
-const kinveyAppKey = "kid_HJ4bWzxMZ";
-const kinveyAppSecret = "5ad6a3e5f39d4b89b0ec339f99110b76";
+const baseUrl = 'https://baas.kinvey.com/';
+const appKey = 'kid_HJ4bWzxMZ';
+const appSecret = '5ad6a3e5f39d4b89b0ec339f99110b76';
 
 function makeAuth(type) {
-    switch (type) {
-        case 'basic':
-            return { 'Authorization': "Basic " + btoa(kinveyAppKey + ":" + kinveyAppSecret) };
-        case 'kinvey':
-            return { 'Authorization': "Kinvey " + sessionStorage.getItem('authToken') };
-        default: break;
-    }
+    if (type === 'basic') return 'Basic ' + btoa(appKey + ':' + appSecret);
+    else return 'Kinvey ' + sessionStorage.getItem('authToken');
 }
 
-function get(module, uri, auth) {
-    const kinveyLoginUrl = kinveyBaseUrl + module + "/" + kinveyAppKey + "/" + uri;
-    const kinveyAuthHeaders = makeAuth(auth);
-
-    return $.ajax({
-        method: "GET",
-        url: kinveyLoginUrl,
-        headers: kinveyAuthHeaders
-    });
-}
-
-function post(module, uri, data, auth) {
-    const kinveyLoginUrl = kinveyBaseUrl + module + "/" + kinveyAppKey + "/" + uri;
-    const kinveyAuthHeaders = makeAuth(auth);
-
-    let request = {
-        method: "POST",
-        url: kinveyLoginUrl,
-        headers: kinveyAuthHeaders
+function makeRequest(method, module, url, auth) {
+    return {
+        url: baseUrl + module + '/' + appKey + '/' + url,
+        method,
+        headers: {
+            'Authorization': makeAuth(auth)
+        }
     };
-
-    if (data !== null) {
-        request.data = data;
-    }
-    return $.ajax(request);
 }
 
-function update(module, uri, data, auth) {
-    const kinveyLoginUrl = kinveyBaseUrl + module + "/" + kinveyAppKey + "/" + uri;
-    const kinveyAuthHeaders = makeAuth(auth);
-
-    let request = {
-        method: "PUT",
-        url: kinveyLoginUrl,
-        headers: kinveyAuthHeaders,
-        data: data
-    };
-
-    return $.ajax(request);
+function get(module, url, auth) {
+    return $.ajax(makeRequest('GET', module, url, auth));
 }
 
-export {get, post, update};
+function post(module, url, data, auth) {
+    let req = makeRequest('POST', module, url, auth);
+    req.data = JSON.stringify(data);
+    req.headers['Content-Type'] = 'application/json';
+    return $.ajax(req);
+}
+
+function update(module, url, data, auth) {
+    let req = makeRequest('PUT', module, url, auth);
+    req.data = JSON.stringify(data);
+    req.headers['Content-Type'] = 'application/json';
+    return $.ajax(req);
+}
+
+function remove(module, url, auth) {
+    return $.ajax(makeRequest('DELETE', module, url, auth));
+}
+
+export { get, post, update, remove };

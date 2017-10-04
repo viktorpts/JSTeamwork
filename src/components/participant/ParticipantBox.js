@@ -3,6 +3,7 @@ import SignInForm from './SignInForm';
 import ParticipantInfo from './ParticipantInfo';
 import DQInfo from './DQInfo';
 import {post} from '../../services/requester';
+import {getUserInfo} from '../../services/repository';
 
 export default class ParticipantBox extends Component {
     constructor(props) {
@@ -53,7 +54,7 @@ export default class ParticipantBox extends Component {
     async loadUserInfo(name) {
         this.setState({status: 1});
         try {
-            let participantData = await post('rpc', 'custom/teammates', {username: name}, 'kinvey');
+            let participantData = await getUserInfo(name);
             if (participantData) {
                 let fullName = participantData.name;
                 let username = participantData.username;
