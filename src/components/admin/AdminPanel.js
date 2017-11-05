@@ -3,7 +3,7 @@ import {Switch, Route} from 'react-router';
 import {NavLink} from 'react-router-dom';
 import Importer from './Importer';
 import Assign from './Assign';
-import Archive from './Archive';
+import TeamEditor from './TeamEditor';
 import ManageParticipants from './ManageParticipants';
 
 export default class AdminPanel extends Component {
@@ -20,7 +20,7 @@ export default class AdminPanel extends Component {
                     <Route exact path="/admin" component={InlineInfo}/>
                     <Route path="/admin/import" component={Importer}/>
                     <Route path="/admin/assign" component={Assign}/>
-                    <Route path="/admin/teams" component={Archive}/>
+                    <Route path="/admin/teams" component={TeamEditor}/>
                     <Route path="/admin/participants" component={ManageParticipants}/>
                 </Switch>
             </div>

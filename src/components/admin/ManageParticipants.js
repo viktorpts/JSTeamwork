@@ -1,32 +1,66 @@
-import React, {Component} from 'react';
-import {getAllUsers} from '../../services/repository';
+import React, { Component } from 'react';
+import { getAllUsers } from '../../services/repository';
 import ParticipantList from './common/ParticipantList';
 
-// TODO this functionality can be performed by the Archive component
+//import { post } from '../../services/requester';
+
+// TODO this functionality can be performed by the TeamEditor component
 
 export default class ManageParticipants extends Component {
     constructor(props) {
         super(props);
 
-        this.state = {status: 0, list: []};
+        this.state = { status: 0, list: [], lastId: 0 };
 
         // Bind event listeners
         this.reload = this.reload.bind(this);
     }
 
+    // This function can be used to update all users when changing the structure of the data
+    /* 
+    async updateUsers(list) {
+        let updatedUsers = {
+            users: list.map(u => [u.Username,
+            {
+                Role: u.Role === 'In Class' ? 'Onsite' : u.Role,
+                History: u.History,
+                Team: u.Team,
+                SearchName: u.SearchName
+            }])
+        };
+
+        //console.log(updatedUsers);
+        const res = await post('rpc', 'custom/updateUsers', updatedUsers, 'kinvey');
+        console.log('done', res);
+    }
+    //*/
 
     componentDidMount() {
         this.loadParticipants();
     }
 
+    getLastTeamId(list) {
+        let lastId = 0;
+        for (let user of list) {
+            if (user.Team > lastId) {
+                lastId = user.Team;
+            }
+        }
+        return lastId;
+    }
+
     async loadParticipants() {
         try {
             let list = await getAllUsers();
-            this.setState({status: 1, list: list});
+            let lastId = this.getLastTeamId(list);
+            this.setState({ status: 1, list, lastId });
+
+            // This function can be used to update all users when changing the structure of the data
+            //this.updateUsers(list);
         } catch (err) {
             console.error('Request failed');
             console.dir(err);
-            this.setState({status: -1});
+            this.setState({ status: -1 });
         }
     }
 
@@ -40,11 +74,11 @@ export default class ManageParticipants extends Component {
     render() {
         let main = <p>Loading participants...</p>;
         if (this.state.status === -1) {
-            main = <p style={{color: "red"}}>Request error, see log for details.</p>
+            main = <p style={{ color: "red" }}>Request error, see log for details.</p>
         } else if (this.state.status === 1) {
             main =
                 <div>
-                    <ParticipantList list={this.state.list} manage={true}/>
+                    <ParticipantList list={this.state.list} manage={true} lastId={this.state.lastId} />
                 </div>;
         }
 

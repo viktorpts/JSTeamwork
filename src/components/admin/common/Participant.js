@@ -1,17 +1,28 @@
-import React, {Component} from 'react';
-import {updateUser} from '../../../services/repository';
+import React, { Component } from 'react';
+import { updateUser } from '../../../services/repository';
 
 export default class Participant extends Component {
     constructor(props) {
         super(props);
 
-        this.state = {selectedRole: this.props.user.Role};
+        this.state = { selectedRole: this.props.user.Role, selectedTeamId: this.props.user.Team };
 
         this.onChange = this.onChange.bind(this);
     }
 
     onChange(event) {
-        this.setState({selectedRole: event.target.value});
+        switch (event.target.name) {
+            case "selectedRole":
+                this.setState({ selectedRole: event.target.value });
+                break;
+            case "selectedTeamId":
+                if (isNaN(event.target.value)) {
+                    break;
+                }
+                this.setState({ selectedTeamId: Number(event.target.value) });
+                break;
+            default:
+        }
     }
 
     async apply(event) {
@@ -20,6 +31,7 @@ export default class Participant extends Component {
         btn.innerHTML = "&#9744;";
         let newValues = Object.assign({}, this.props.user);
         newValues.Role = this.state.selectedRole;
+        newValues.Team = this.state.selectedTeamId;
         try {
             await updateUser(newValues);
             btn.innerHTML = "&#9745;";
@@ -33,16 +45,23 @@ export default class Participant extends Component {
     render() {
         let className = 'participant';
 
-        let controls =
+        let controls = (
             <div>
-                <select className="select" value={this.state.selectedRole} onChange={this.onChange}>
+                <label htmlFor="teamId">Team ID:</label>
+                <input
+                    style={{ width: "5em" }}
+                    type="text" name="selectedTeamId"
+                    value={this.state.selectedTeamId}
+                    onChange={this.onChange} />
+                <select className="select" name="selectedRole" value={this.state.selectedRole} onChange={this.onChange}>
                     <option value="In Class">In Class</option>
                     <option value="Onsite">Onsite</option>
                     <option value="Online">Online</option>
                     <option value="DQ">DQ</option>
                 </select>
                 <button className="btn" onClick={(event) => this.apply(event)}>Apply</button>
-            </div>;
+            </div>
+        );
 
         switch (this.props.user.Role) {
             case "In Class":

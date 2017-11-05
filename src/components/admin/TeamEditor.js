@@ -3,7 +3,7 @@ import {getAllUsers, archiveTeams as archive, applyTeamWipe, teamsExist, teamsFr
 import ParticipantList from './common/ParticipantList';
 import TeamList from './common/TeamList';
 
-export default class Assign extends Component {
+export default class TeamEditor extends Component {
     constructor(props) {
         super(props);
 
@@ -68,7 +68,7 @@ export default class Assign extends Component {
         } else if (this.state.status === 1) {
             main =
                 <div>
-                    {!teamsExist(this.state.list) && <p style={{color: "red"}}>No teams have been detected. You can still wipe presence information (this will delete team history!).</p>}
+                    {!teamsExist(this.state.list) && <p style={{color: "red"}}>No teams have been detected. You can still wipe presence information.</p>}
                     <TeamList teams={teamsFromUsers(this.state.list)} />
                 </div>;
         } else if (this.state.status === 2) {

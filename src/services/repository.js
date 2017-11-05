@@ -40,7 +40,7 @@ async function getAllUsers() {
 
 async function getUserInfo(username) {
     let userInfo = await post('rpc', 'custom/teammates', {username});
-    userInfo.teamContacts = userInfo.teamContacts.filter(c => c.username !== username);
+    userInfo.teamContacts = userInfo.teamContacts.filter(c => c.username.toLowerCase() !== username.toLowerCase());
     return userInfo;
 }
 
@@ -94,7 +94,7 @@ function applyTeams(teams) {
     let lastId = 0;
     for (let team of teams) {
         for (let user of team) {
-            for (let teamId of user.History) {
+            for (let teamId of user.History || []) {
                 if (teamId > lastId) {
                     lastId = teamId;
                 }
@@ -186,6 +186,7 @@ function sortUsers(a, b) {
             break;
     }
 
+    if (ra === rb) return a.Team - b.Team;
     return ra - rb;
 }
 
