@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { getAllUsers } from '../../services/repository';
 import ParticipantList from './common/ParticipantList';
 
+//import userlist from './userlist.json';
 //import { post } from '../../services/requester';
 
 // TODO this functionality can be performed by the TeamEditor component
@@ -19,15 +20,22 @@ export default class ManageParticipants extends Component {
     // This function can be used to update all users when changing the structure of the data
     /* 
     async updateUsers(list) {
+
         let updatedUsers = {
             users: list.map(u => [u.Username,
             {
-                Role: u.Role === 'In Class' ? 'Onsite' : u.Role,
+                Role: u.Role,
                 History: u.History,
-                Team: u.Team,
+                Team: getTeam(u.Username) || u.Team,
                 SearchName: u.SearchName
             }])
         };
+
+        function getTeam(username) {
+            const user = userlist.filter(u => u.username === username)[0];
+            if (user) return user.teamId;
+            return false;
+        }
 
         //console.log(updatedUsers);
         const res = await post('rpc', 'custom/updateUsers', updatedUsers, 'kinvey');

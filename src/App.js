@@ -7,6 +7,7 @@ import './App.css';
 // Components
 import ParticipantHome from './components/ParticipantHome';
 import AdminHome from './components/AdminHome';
+import TopicPage from './components/TopicPage';
 
 class App extends Component {
     render() {
@@ -18,6 +19,7 @@ class App extends Component {
                 <Switch>
                     <Route exact path="/" component={ParticipantHome}/>
                     <Route path="/admin" component={AdminHome}/>
+                    <Route path="/topic/:id" component={TopicPage}/>
                 </Switch>
                 <div className="Component-header footer"><span>&copy; 2017</span></div>
             </div>

@@ -19,7 +19,7 @@ export default class ParticipantBox extends Component {
     }
 
     async onPresentHandler(event) {
-        let username = sessionStorage.getItem('participantName');
+        let username = localStorage.getItem('participantName');
         this.setState({status: 1});
         try {
             let response = await post('rpc', 'custom/present', {username: username}, 'kinvey');
@@ -40,12 +40,12 @@ export default class ParticipantBox extends Component {
     }
 
     onChangeUserClickHandler(event) {
-        sessionStorage.removeItem('participantName');
+        localStorage.removeItem('participantName');
         this.setState({userDate: {currentUser: '', role: '', teammates: []}, status: 0});
     }
 
     componentDidMount() {
-        let current = sessionStorage.getItem('participantName');
+        let current = localStorage.getItem('participantName');
         if (current) {
             this.loadUserInfo(current);
         }
@@ -60,7 +60,7 @@ export default class ParticipantBox extends Component {
                 let username = participantData.username;
                 let role = participantData.role;
                 let teammates = participantData.teamContacts;
-                sessionStorage.setItem('participantName', username);
+                localStorage.setItem('participantName', username);
                 this.setState({userData: {currentUser: fullName, role: role, teammates: teammates}, status: 2});
             } else {
                 throw new Error('User name not found in database.');

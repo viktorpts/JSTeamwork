@@ -2,8 +2,8 @@ import * as requester from './requester';
 
 
 function saveSession(userInfo) {
-    sessionStorage.setItem('authToken', userInfo._kmd.authtoken);
-    sessionStorage.setItem('userId', userInfo._id);
+    localStorage.setItem('authToken', userInfo._kmd.authtoken);
+    localStorage.setItem('userId', userInfo._id);
 
     //observer.onSessionUpdate();
 }
@@ -11,7 +11,7 @@ function saveSession(userInfo) {
 // Anonymous access to backend
 async function createImplicitUser() {
     // Check if we already have an anonymous user session
-    if (sessionStorage.getItem('authToken')) {
+    if (localStorage.getItem('authToken')) {
         return;
     }
 
@@ -45,7 +45,7 @@ async function register(username, password, callback) {
 // user/logout
 async function logout(callback) {
     await requester.post('user', '_logout', null, 'kinvey');
-    sessionStorage.clear();
+    localStorage.clear();
     //observer.onSessionUpdate();
 }
 

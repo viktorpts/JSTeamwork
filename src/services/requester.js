@@ -6,7 +6,7 @@ const appSecret = '5ad6a3e5f39d4b89b0ec339f99110b76';
 
 function makeAuth(type) {
     if (type === 'basic') return 'Basic ' + btoa(appKey + ':' + appSecret);
-    else return 'Kinvey ' + sessionStorage.getItem('authToken');
+    else return 'Kinvey ' + localStorage.getItem('authToken');
 }
 
 function makeRequest(method, module, url, auth) {

@@ -13,7 +13,7 @@ export default class Endpoint extends Component {
 
     async onTest() {
         try {
-            let response = await post('rpc', 'custom/present', {username: sessionStorage.getItem('participantName')}, 'kinvey');
+            let response = await post('rpc', 'custom/present', {username: localStorage.getItem('participantName')}, 'kinvey');
             console.dir(response);
         } catch (err) {
             console.error('Request failed');
