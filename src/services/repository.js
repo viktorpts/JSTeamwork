@@ -1,4 +1,8 @@
-import { get, post, update } from './requester';
+import {
+    get,
+    post,
+    update
+} from './requester';
 
 // TODO participant list is used in multiple places, it should be placed here as a synced shared resource
 
@@ -6,6 +10,7 @@ async function createUser(name, username, contact, role) {
     let newUser = {
         Name: name,
         Username: username,
+        SearchName: username.toLowerCase(),
         Email: contact,
         Role: role,
         History: [],
@@ -39,7 +44,9 @@ async function getAllUsers() {
 }
 
 async function getUserInfo(username) {
-    let userInfo = await post('rpc', 'custom/teammates', {username});
+    let userInfo = await post('rpc', 'custom/teammates', {
+        username
+    });
     userInfo.teamContacts = userInfo.teamContacts.filter(c => c.username.toLowerCase() !== username.toLowerCase());
     return userInfo;
 }
@@ -56,18 +63,15 @@ function scramble(list) {
     const min = 3;
     const max = 4;
     let teams = [];
-    while (list.length > 9) teams.push(extractTeammates(4));
+    while (list.length > 8) teams.push(extractTeammates(5));
     while (list.length > 0) {
         switch (list.length) {
-            case 9:
-            case 6:
-            case 5:
-                teams.push(extractTeammates(3));
-                break;
             case 8:
             case 7:
-            case 4:
                 teams.push(extractTeammates(4));
+                break;
+            case 6:
+                teams.push(extractTeammates(3));
                 break;
             default:
                 teams.push(extractTeammates(list.length));
@@ -128,16 +132,39 @@ function archiveTeams(users) {
     return users;
 }
 
-function applyTeamWipe(users) {
-    let newValues = { users: users.map(u => [u.Username, { Role: u.Role, History: u.History, Team: u.Team }]) };
+function chunkRequest(packedUsers) {
+    const editable = packedUsers.users.slice();
+    const requests = [];
+    while (editable.length > 0) {
+        requests.push(post('rpc', 'custom/updateUsers', {
+            users: editable.splice(0, 50)
+        }, 'kinvey'));
+    }
+    return Promise.all(requests);
+}
 
-    return post('rpc', 'custom/updateUsers', newValues, 'kinvey');
+function applyTeamWipe(users) {
+    let newValues = {
+        users: users.map(u => [u.Username, {
+            Role: u.Role,
+            History: u.History,
+            Team: u.Team
+        }])
+    };
+
+    return chunkRequest(newValues);
+    //return post('rpc', 'custom/updateUsers', newValues, 'kinvey');
 }
 
 function saveTeams(users) {
-    let newValues = { users: users.map(u => [u.Username, { Team: u.Team }]) };
+    let newValues = {
+        users: users.map(u => [u.Username, {
+            Team: u.Team
+        }])
+    };
 
-    return post('rpc', 'custom/updateUsers', newValues, 'kinvey');
+    return chunkRequest(newValues);
+    //return post('rpc', 'custom/updateUsers', newValues, 'kinvey');
 }
 
 function teamsExist(list) {
@@ -168,7 +195,8 @@ function teamsFromUsers(list) {
 }
 
 function sortUsers(a, b) {
-    let ra = 0, rb = 0;
+    let ra = 0,
+        rb = 0;
     switch (a.Role) {
         case 'Onsite':
             ra = 1;
